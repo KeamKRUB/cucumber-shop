@@ -23,6 +23,8 @@ Scenario: Buy three products
     And I buy "Butter" with quantity 1
     Then total should be 181.00
 
-Scenario: Try to buy more than stock
+Scenario: Buy products more than stock
     When I buy "Bread" with quantity 10
     Then the purchase for "Bread" should be rejected due to insufficient stock
+    And I buy "Jam" with quantity 1
+    Then total should be 80.00
