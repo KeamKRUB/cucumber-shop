@@ -24,7 +24,8 @@ public class BuyStepdefs {
         catalog.addProduct(name, price, stock);
     }
 
-    @When("I buy {string} with quantity {int}") public void i_buy_with_quantity(String name, int quantity) {
+    @When("I buy {string} with quantity {int}")
+    public void i_buy_with_quantity(String name, int quantity) {
         Product prod = catalog.getProduct(name);
         try {
             order.addItem(prod, quantity);
@@ -39,7 +40,7 @@ public class BuyStepdefs {
     }
 
     @Then("the purchase for {string} should be rejected due to insufficient stock")
-    public void the_product_is_sold_out(String name) {
+    public void the_product_does_not_have_enough_stock(String name) {
         assertEquals("Not enough stock for " + name, exception.getMessage());
     }
 }
