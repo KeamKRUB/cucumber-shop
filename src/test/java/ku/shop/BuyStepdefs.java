@@ -4,12 +4,14 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BuyStepdefs {
 
     private ProductCatalog catalog;
     private Order order;
+    private Exception exception;
 
     @Given("the store is ready to service customers")
     public void the_store_is_ready_to_service_customers() {
@@ -22,15 +24,23 @@ public class BuyStepdefs {
         catalog.addProduct(name, price, stock);
     }
 
-    @When("I buy {string} with quantity {int}")
-    public void i_buy_with_quantity(String name, int quantity) {
+    @When("I buy {string} with quantity {int}") public void i_buy_with_quantity(String name, int quantity) {
         Product prod = catalog.getProduct(name);
-        order.addItem(prod, quantity);
+        try {
+            order.addItem(prod, quantity);
+        } catch (Exception e) {
+            exception = e;
+        }
     }
 
     @Then("total should be {float}")
     public void total_should_be(double total) {
         assertEquals(total, order.getTotal());
+    }
+
+    @Then("the purchase for {string} should be rejected due to insufficient stock")
+    public void the_product_is_sold_out(String name) {
+        assertEquals("Not enough stock for " + name, exception.getMessage());
     }
 }
 
